@@ -21,6 +21,13 @@ _rv_git_prompt() {
   echo "${info}$(git_prompt_status)${FG[075]})"
 }
 
+# OMZ git_prompt_* is async; auto-registration scans PS1 for literal
+# $(git_prompt_info). Our helper hides that, so register handlers manually.
+(( $+functions[_omz_register_handler] )) && {
+  _omz_register_handler _omz_git_prompt_info
+  _omz_register_handler _omz_git_prompt_status
+}
+
 PS1='${FG[032]}%~$(_rv_git_prompt)%{$reset_color%}
 ${FG[105]}%(!.#.>)%{$reset_color%} '
 PS2='%{$fg[red]%}\ %{$reset_color%}'
